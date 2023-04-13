@@ -78,22 +78,24 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
     # define variables and pdfs
     Jpsi_M = RooRealVar("Jpsi_M","Jpsi_M", xmin, xmax)
     
-    mean  = RooRealVar("mean", "mean",  mean_val, mean_val-200, mean_val+200)
-    sigma = RooRealVar("sigma", "sigma", 80, 10, 150)
-    gauss = RooGaussian("gauss", "gauss", Jpsi_M, mean, sigma)
+    #mean  = RooRealVar("mean", "mean",  mean_val, mean_val-200, mean_val+200)
+    #sigma = RooRealVar("sigma", "sigma", 80, 10, 150)
+    #gauss = RooGaussian("gauss", "gauss", Jpsi_M, mean, sigma)
     
-    #tau = RooRealVar("tau", "tau", -0.005, -0.01, 0.)
-    #exp = RooExponential("exp", "exp", Jpsi_M, tau)
 
-    mean_ball=3100
+    mean_ball=mean_val
 
     meanball  = RooRealVar("meanball","meanball",mean_ball,mean_ball-300,mean_ball+300)
-    sigmaball = RooRealVar("sigmaball", "sigmaball", 100, 50, 400)
+    sigmaball = RooRealVar("sigmaball", "sigmaball", 80, 10, 100)
     alphaL    = RooRealVar("alphaL", "alphaL", 0.5, 0.1, 10.)
-    nL        = RooRealVar("nL", "nL", 60, 20, 150)
+    nL        = RooRealVar("nL", "nL", 40, 5, 60)
     alphaR    = RooRealVar("alphaR", "alphaR", 3, 0.1, 10.)
     nR        = RooRealVar("nR", "nR", 10, 0.1, 25)
     ball=RooCrystalBall("ball","ball",Jpsi_M,meanball,sigmaball,alphaL,nL,alphaR,nR)
+    
+    
+    tau = RooRealVar("tau", "tau", -0.1, -1, 0.)
+    exp = RooExponential("exp", "exp", Jpsi_M, tau)
     
     # define coefficiencts
     nsig = RooRealVar("nsig", "nsig", 1000, 0, 20000)
@@ -103,8 +105,8 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
     suma = RooArgList()
     coeff = RooArgList()
     
-    suma.add(gauss)
     suma.add(ball)
+    suma.add(exp)
     
     coeff.add(nsig)
     coeff.add(nbkg)
@@ -145,9 +147,9 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
 
     ###################
 
-    model.plotOn(massFrame, RooFit.Components("gauss"), RooFit.LineColor(2),
+    model.plotOn(massFrame, RooFit.Components("ball"), RooFit.LineColor(2),
                  RooFit.VisualizeError(fitResults, 1))
-    model.plotOn(massFrame, RooFit.Components("ball")  , RooFit.LineColor(3),
+    model.plotOn(massFrame, RooFit.Components("exp")  , RooFit.LineColor(3),
                  RooFit.VisualizeError(fitResults, 1))
     #model.paramOn(massFrame, Layout=(.55,.95,.93), Parameters=RooArgSet(nsig, nbkg, mean, sigma, tau))
 
@@ -178,14 +180,14 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
     t2 = ROOT.TPaveLabel(500.,140.,1500.,180., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
     t3 = ROOT.TPaveLabel(500.,180.,1500.,220., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
     t4 = ROOT.TPaveLabel(500.,220.,1500.,260., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
-    t5 = ROOT.TPaveLabel(500.,260.,1500.,300., 'Meanball = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
-    t6 = ROOT.TPaveLabel(500.,300.,1500.,340., 'Sigmaball = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
+    t5 = ROOT.TPaveLabel(500.,260.,1500.,300., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
+    t6 = ROOT.TPaveLabel(500.,300.,1500.,340., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
     t8 = ROOT.TPaveLabel(500.,340.,1500.,380., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
     t9 = ROOT.TPaveLabel(500.,380.,1500.,420., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
     t10 = ROOT.TPaveLabel(500.,420.,1500.,460., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
     t11 = ROOT.TPaveLabel(500.,460.,1500.,500., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
-    t7 = ROOT.TPaveLabel(500.,500.,1500.,540., 'Mean SIGNAL = {:.5f} +- {:.5f}'.format(mean.getValV(), mean.getError()))
-    t12 = ROOT.TPaveLabel(500.,540.,1500.,580., 'Sigma SIGNAL = {:.5f} +- {:.5f}'.format(sigma.getValV(), sigma.getError()))
+    t7 = ROOT.TPaveLabel(500.,500.,1500.,540., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
+    #t12 = ROOT.TPaveLabel(500.,540.,1500.,580., 'Sigma SIGNAL = {:.5f} +- {:.5f}'.format(sigma.getValV(), sigma.getError()))
     
     massFrame.addObject(t2)
     massFrame.addObject(t3)
@@ -197,7 +199,7 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
     massFrame.addObject(t9)
     massFrame.addObject(t10)
     massFrame.addObject(t11)
-    massFrame.addObject(t12)
+    #massFrame.addObject(t12)
 
     massFrame.Draw()
     #Save the result
