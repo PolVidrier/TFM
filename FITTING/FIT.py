@@ -94,22 +94,22 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
     ball=RooCrystalBall("ball","ball",Jpsi_M,meanball,sigmaball,alphaL,nL,alphaR,nR)
     
     
-    tau = RooRealVar("tau", "tau", -0.1, -1, 0.)
-    exp = RooExponential("exp", "exp", Jpsi_M, tau)
+    #tau = RooRealVar("tau", "tau", -0.1, -1, 0.)
+    #exp = RooExponential("exp", "exp", Jpsi_M, tau)
     
     # define coefficiencts
     nsig = RooRealVar("nsig", "nsig", 1000, 0, 20000)
-    nbkg = RooRealVar("nbkg", "nbkg", 1000, 0, 20000)
+    #nbkg = RooRealVar("nbkg", "nbkg", 1000, 0, 20000)
     
     # build model
     suma = RooArgList()
     coeff = RooArgList()
     
     suma.add(ball)
-    suma.add(exp)
+    #suma.add(exp)
     
     coeff.add(nsig)
-    coeff.add(nbkg)
+    #coeff.add(nbkg)
     
     model = ROOT.RooAddPdf("model", "model", suma, coeff)
     
@@ -149,13 +149,13 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
 
     model.plotOn(massFrame, RooFit.Components("ball"), RooFit.LineColor(2),
                  RooFit.VisualizeError(fitResults, 1))
-    model.plotOn(massFrame, RooFit.Components("exp")  , RooFit.LineColor(3),
-                 RooFit.VisualizeError(fitResults, 1))
+    #model.plotOn(massFrame, RooFit.Components("exp")  , RooFit.LineColor(3),
+    #+             RooFit.VisualizeError(fitResults, 1))
     #model.paramOn(massFrame, Layout=(.55,.95,.93), Parameters=RooArgSet(nsig, nbkg, mean, sigma, tau))
 
     #Draw the fitted histogram into pad1
     pad1.cd()
-    t1 = ROOT.TPaveLabel(500.,100.,1500.,140., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
+    t1 = ROOT.TPaveLabel(500.,180.,1500.,220., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
     massFrame.addObject(t1) 
     massFrame.SetTitle("Histogram and fit")
     
@@ -166,35 +166,36 @@ def ballFit(tree, cuts, mean_val, xmin = 4000, xmax = 7000):
     print("Total number of entries is: {}".format(ds.numEntries()))
     print("Number of sig entries is: {:.0f} +- {:.0f}".format(nsig.getValV(),
                                                               nsig.getError()))
-    print("Number of bkg entries is: {:.0f} +- {:.0f}".format(nbkg.getValV(),
-                                                              nbkg.getError()))
+    #print("Number of bkg entries is: {:.0f} +- {:.0f}".format(nbkg.getValV(),
+    #                                                          nbkg.getError()))
     
     # compute S/(S+B)**0.5, with error propagation from uncertainties module
     sigVal = ufloat(nsig.getValV(), nsig.getError())
-    bkgVal = ufloat(nbkg.getValV(), nbkg.getError())
-    signif = sigVal/(sigVal+bkgVal)**0.5
+    #bkgVal = ufloat(nbkg.getValV(), nbkg.getError())
+    #signif = sigVal/(sigVal+bkgVal)**0.5
     
-    print("S/sqrt(S+B) = {:.2f} +- {:.2f}".format(signif.nominal_value, signif.std_dev))
+    #print("S/sqrt(S+B) = {:.2f} +- {:.2f}".format(signif.nominal_value, signif.std_dev))
 
     
-    t2 = ROOT.TPaveLabel(500.,140.,1500.,180., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
-    t3 = ROOT.TPaveLabel(500.,180.,1500.,220., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
-    t4 = ROOT.TPaveLabel(500.,220.,1500.,260., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
+    #t2 = ROOT.TPaveLabel(500.,140.,1500.,180., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
+    t3 = ROOT.TPaveLabel(500.,220.,1500.,260., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
+    #t4 = ROOT.TPaveLabel(500.,220.,1500.,260., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
     t5 = ROOT.TPaveLabel(500.,260.,1500.,300., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
     t6 = ROOT.TPaveLabel(500.,300.,1500.,340., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
     t8 = ROOT.TPaveLabel(500.,340.,1500.,380., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
     t9 = ROOT.TPaveLabel(500.,380.,1500.,420., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
     t10 = ROOT.TPaveLabel(500.,420.,1500.,460., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
     t11 = ROOT.TPaveLabel(500.,460.,1500.,500., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
-    t7 = ROOT.TPaveLabel(500.,500.,1500.,540., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
+    #t7 = ROOT.TPaveLabel(500.,500.,1500.,540., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
     #t12 = ROOT.TPaveLabel(500.,540.,1500.,580., 'Sigma SIGNAL = {:.5f} +- {:.5f}'.format(sigma.getValV(), sigma.getError()))
     
-    massFrame.addObject(t2)
+    
+    #massFrame.addObject(t2)
     massFrame.addObject(t3)
-    massFrame.addObject(t4)
+    #massFrame.addObject(t4)
     massFrame.addObject(t5)
     massFrame.addObject(t6)
-    massFrame.addObject(t7)
+    #massFrame.addObject(t7)
     massFrame.addObject(t8)
     massFrame.addObject(t9)
     massFrame.addObject(t10)

@@ -1,4 +1,4 @@
-# SAME AS FIT_for_data BUT WITH SOME VARIABLES FIXED
+# SAME AS FIT BUT ADAPTED TO READ FROM A .TXT FILE
 
 
 
@@ -51,7 +51,7 @@ RooCrystalBall = ROOT.RooCrystalBall
 RooAbsReal     = ROOT.RooAbsReal
 
 # definition of functions for this script
-def ballFitdatarest(tree, cuts, mean_val, xmin = 4000, xmax = 7000):   # NOW TREE IS A .TXT FILE
+def ballFitdata200035000(tree, cuts, mean_val, xmin = 4000, xmax = 7000):   # NOW TREE IS A .TXT FILE
     """
     This function fits the "Jpsi_M" variable of a given TTree
     with a model formed by a Gaussian and an exponential pdf.
@@ -82,26 +82,21 @@ def ballFitdatarest(tree, cuts, mean_val, xmin = 4000, xmax = 7000):   # NOW TRE
     #sigma = RooRealVar("sigma", "sigma", 80, 10, 150)
     #gauss = RooGaussian("gauss", "gauss", Jpsi_M, mean, sigma)
     
+    
+
     mean_ball=mean_val
 
     meanball  = RooRealVar("meanball","meanball",mean_ball,mean_ball-300,mean_ball+300)
     sigmaball = RooRealVar("sigmaball", "sigmaball", 80, 10, 100)
-    alphaL    = RooRealVar("alphaL", "alphaL", 0.16, 0.1, 10.)
-    nL        = RooRealVar("nL", "nL", 10.98, 5, 60)
-    alphaR    = RooRealVar("alphaR", "alphaR", 0.93, 0.1, 10.)
-    nR        = RooRealVar("nR", "nR", 2.78, 0.1, 25)
+    alphaL    = RooRealVar("alphaL", "alphaL", 0.5, 0.1, 10.)
+    nL        = RooRealVar("nL", "nL", 20, 1, 40)
+    alphaR    = RooRealVar("alphaR", "alphaR", 3, 0.1, 10.)
+    nR        = RooRealVar("nR", "nR", 10, 0.1, 25)
     ball=RooCrystalBall("ball","ball",Jpsi_M,meanball,sigmaball,alphaL,nL,alphaR,nR)
     
     
-    tau = RooRealVar("tau", "tau", -0.25512, -1, 0.)
+    tau = RooRealVar("tau", "tau", -0.1, -1, 0.)
     exp = RooExponential("exp", "exp", Jpsi_M, tau)
-    
-    alphaL.setConstant(True)
-    alphaR.setConstant(True)
-    nL.setConstant(True)
-    nR.setConstant(True)
-    
-
 
     # define coefficiencts
     nsig = RooRealVar("nsig", "nsig", 1000, 0, 20000)
@@ -174,7 +169,7 @@ def ballFitdatarest(tree, cuts, mean_val, xmin = 4000, xmax = 7000):   # NOW TRE
 
     #Draw the fitted histogram into pad1
     pad1.cd()
-    t1 = ROOT.TPaveLabel(500.,35.,1500.,40., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
+    t1 = ROOT.TPaveLabel(2100.,15.,2400.,18., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
     massFrame.addObject(t1) 
     massFrame.SetTitle("Histogram and fit")
     
@@ -196,17 +191,17 @@ def ballFitdatarest(tree, cuts, mean_val, xmin = 4000, xmax = 7000):   # NOW TRE
     print("S/sqrt(S+B) = {:.2f} +- {:.2f}".format(signif.nominal_value, signif.std_dev))
 
     
-    t2 = ROOT.TPaveLabel(500.,40.,1500.,45., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
-    t3 = ROOT.TPaveLabel(500.,45.,1500.,50., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
-    t4 = ROOT.TPaveLabel(500.,50.,1500.,55., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
-    t5 = ROOT.TPaveLabel(500.,55.,1500.,60., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
-    t6 = ROOT.TPaveLabel(500.,60.,1500.,65., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
-    t8 = ROOT.TPaveLabel(500.,65.,1500.,70., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
-    t9 = ROOT.TPaveLabel(500.,70.,1500.,75., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
-    t10 = ROOT.TPaveLabel(500.,75.,1500.,80., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
-    t11 = ROOT.TPaveLabel(500.,80.,1500.,85., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
-    t7 = ROOT.TPaveLabel(500.,85.,1500.,90., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
-    #t12 = ROOT.TPaveLabel(500.,90.,1500.,95., 'Sigma SIGNAL = {:.5f} +- {:.5f}'.format(sigma.getValV(), sigma.getError()))
+    t2 = ROOT.TPaveLabel(2100.,18.,2400.,21., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
+    t3 = ROOT.TPaveLabel(2100.,21.,2400.,24., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
+    t4 = ROOT.TPaveLabel(2100.,24.,2400.,27., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
+    t5 = ROOT.TPaveLabel(2100.,27.,2400.,30., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
+    t6 = ROOT.TPaveLabel(2100.,30.,2400.,33., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
+    t8 = ROOT.TPaveLabel(2100.,33.,2400.,36., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
+    t9 = ROOT.TPaveLabel(2100.,36.,2400.,39., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
+    t10 = ROOT.TPaveLabel(2100.,39.,2400.,42., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
+    t11 = ROOT.TPaveLabel(2100.,42.,2400.,45., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
+    t7 = ROOT.TPaveLabel(2100.,45.,2400.,48., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
+    #t12 = ROOT.TPaveLabel(2100.,90.,2400.,95., 'Sigma SIGNAL = {:.5f} +- {:.5f}'.format(sigma.getValV(), sigma.getError()))
     
     massFrame.addObject(t2)
     massFrame.addObject(t3)
@@ -222,7 +217,7 @@ def ballFitdatarest(tree, cuts, mean_val, xmin = 4000, xmax = 7000):   # NOW TRE
 
     massFrame.Draw()
     #Save the result
-    can.SaveAs("/afs/cern.ch/work/p/pvidrier/private/GITHUB/FITTING/myFITdata_rest.png")
+    can.SaveAs("/afs/cern.ch/work/p/pvidrier/private/GITHUB/FITTING/myFITdata2000to3500.png")
     #####################
 
     return 
@@ -254,7 +249,7 @@ if __name__=="__main__":
     tree = file.Get(args.tree)
 
     # fit it
-    ballFitdatarest(tree, args.cuts, args.mean,args.xmin, args.xmax)
+    ballFitdata200035000(tree, args.cuts, args.mean,args.xmin, args.xmax)
 
 
 #EOF

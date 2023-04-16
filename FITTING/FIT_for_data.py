@@ -124,11 +124,13 @@ def ballFitdata(tree, cuts, mean_val, xmin = 4000, xmax = 7000):   # NOW TREE IS
 
     # Loop over the input file and add data to the dataset
     for line in input_file:
-        Jpsi_M_val = float(line.strip())
+        Jpsi_M_val= float(line.strip())
+        if Jpsi_M_val<xmin or Jpsi_M_val>xmax:
+            continue 
         Jpsi_M.setVal(Jpsi_M_val)
         ds.add(RooArgSet(Jpsi_M))
     input_file.close()
-    
+
     #create and open the canvas
     can = ROOT.TCanvas("hist","hist", 200,10, 1000, 550)
     pad1 = ROOT.TPad( "pad1", "Histogram",0.,0.15,1.0,1.0,0)
@@ -251,4 +253,3 @@ if __name__=="__main__":
 
 
 #EOF
-
