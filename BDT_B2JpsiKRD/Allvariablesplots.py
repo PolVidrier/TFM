@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import yaml
 
-mc=uproot.open(r"/afs/cern.ch/work/p/pvidrier/private/roots/mc/00170282/0000/00170282_00000001_1.tuple_bu2kee.root")["Tuple/DecayTree;1"]
+mc=uproot.open(r"/afs/cern.ch/work/p/pvidrier/private/roots/mc/mc_total.root")["Tuple/DecayTree;1"]
 data=uproot.open(r"/afs/cern.ch/work/p/pvidrier/private/roots/data/Jpsi2ee_MagAll.root")["tuple_B2JpsiKRD/DecayTree;1"]
 
 features=[]

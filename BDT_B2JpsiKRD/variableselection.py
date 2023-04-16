@@ -17,7 +17,7 @@ for varmc in feature_listmc:
     varmc=varmc.replace("L2","em")
     for var in feature_list: 
         if var==varmc:
-            if var in ["ep_PZ","ep_PID_E","ep_NDOF","ep_HCALPIDE","ep_GHOSTPROB","ep_ETA","ep_ECALPIDE","ep_CLUSTERMATCH","ep_BPVIP","em_BPVIP","em_PZ","em_PID_E","em_NDOF","em_HCALPIDE","em_GHOSTPROB","em_ETA","em_ECALPIDE","Bu_MAX_PT","Jpsi_BPVIPCHI2","Jpsi_BPVIP","Bu_BPVIPCHI2","Bu_BPVIP","Bu_MAXDOCA","Bu_MIN_PT","Bu_MIN_P","Bu_ETA","Jpsi_ETA","Bu_M","Jpsi_M","Bu_MIN_PT","Bu_SUM_PT","Jpsi_PZ"]:
+            if var in ["ep_PZ","ep_PID_E","ep_NDOF","ep_HCALPIDE","ep_ETA","ep_ECALPIDE","ep_CLUSTERMATCH","ep_BPVIP","em_BPVIP","em_PZ","em_PID_E","em_NDOF","em_HCALPIDE","em_ETA","em_ECALPIDE","Bu_MAX_PT","Jpsi_BPVIPCHI2","Jpsi_BPVIP","Bu_BPVIPCHI2","Bu_BPVIP","Bu_MAXDOCA","Bu_MIN_PT","Bu_MIN_P","Bu_ETA","Jpsi_ETA","Bu_M","Jpsi_M","Bu_MIN_PT","Bu_SUM_PT","Jpsi_PZ"]:
                 varmc=varmc.replace("ep","L1")
                 varmc=varmc.replace("em","L2")
                 dictionary[var]=[min([min(vararray[var]),min(vararraymc[varmc])]),max([max(vararray[var]),max(vararraymc[varmc])])]

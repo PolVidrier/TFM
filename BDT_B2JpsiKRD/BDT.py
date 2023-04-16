@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 import sklearn
 from sklearn.model_selection import train_test_split 
 import yaml
+import ROOT
 
-mc=uproot.open(r"/afs/cern.ch/work/p/pvidrier/private/roots/mc/00170282/0000/00170282_00000001_1.tuple_bu2kee.root")["Tuple/DecayTree;1"]
+mc=uproot.open(r"/afs/cern.ch/work/p/pvidrier/private/roots/mc/mc_total.root")["Tuple/DecayTree;1"]
 data=uproot.open(r"/afs/cern.ch/work/p/pvidrier/private/roots/data/Jpsi2ee_MagAll.root")["tuple_B2JpsiKRD/DecayTree;1"]
 
 features=[]
@@ -73,8 +74,10 @@ print("Train size: ", X_train.shape[0])
 print("Test size: ", X_test.shape[0])
 print("Training...")
 # training the model
-xgb_classifier = xgb.XGBClassifier() 
+xgb_classifier = xgb.XGBClassifier(max_depth=6) # the default 
 xgb_classifier.fit(X_train,y_train)
+fn_BDT="BDT_B2JpsiKRD/BDT_xgb.root"
+ROOT.TMVA.Experimental.SaveXGBoost(xgb_classifier, "bdt", fn_BDT, num_inputs=X_train.shape[1])
 print("Ready")
 
 # FEATURE IMPORTANCE
@@ -209,6 +212,13 @@ plt.legend(loc="upper left")
 plt.savefig("BDT_B2JpsiKRD/plots/Jpsi_M.png")
 plt.close()
 
+#df = ROOT.RDataFrame( "tuple_B2JpsiKRD/DecayTree;1","/afs/cern.ch/work/p/pvidrier/private/roots/data/Jpsi2ee_MagAll.root")
+#df_filtered=df.Filter("Jpsi_M>100")
+
+#df2 = df_filtered.Define("bdt_output", xgb_classifier.predict_proba(data))
+#df2.Snapshot("DecayTree","b.root")
+
+
 with open('BDT_B2JpsiKRD/data_Jpsi_M.txt', 'w') as f:
     for item in mas_pred:
         f.write("%s\n" % item)
@@ -238,3 +248,65 @@ plt.xlabel("Bu_M")
 plt.legend(loc="upper left")
 plt.savefig("BDT_B2JpsiKRD/plots/Bu_M.png")
 plt.close()
+
+
+# UPGRADE ATTEMPT
+
+#df = ROOT.RDataFrame( "tuple_B2JpsiKRD/DecayTree;1","/afs/cern.ch/work/p/pvidrier/private/roots/data/Jpsi2ee_MagAll.root")
+#df_filtered=df.Filter("Jpsi_M>100")
+
+#df_filtered["bdt_output"] = datapred_prob
+#df_filtered.Snapshot("DecayTree","b.root")
+
+file_in = ROOT.TFile.Open("/afs/cern.ch/work/p/pvidrier/private/roots/data/Jpsi2ee_MagAll.root", "READ")
+
+# Get the TTree object from the file
+tree_in = file_in.Get("tuple_B2JpsiKRD/DecayTree;1")
+tree_inf=tree_in.CopyTree("Jpsi_M>100")
+
+# Create a new ROOT file in write mode
+file_out= ROOT.TFile.Open("BDT_B2JpsiKRD/data_with_bdt_output.root", "RECREATE")
+tree_out = ROOT.TTree("DecayTree", "DecayTree")
+
+# Create a new TTree in the output file and copy the structure from the input TTree
+tree_out = tree_inf.CloneTree(0)
+tree_out.SetMaxTreeSize(15000000000) # this is 15gb
+# Create a new branch with an ndarray object
+data = datapred_prob
+branch = tree_out.Branch("bdt_output", data, "bdt_output/D")
+
+# Fill the new branch with the ndarray data
+for i in range(tree_inf.GetEntries()):
+    tree_inf.GetEntry(i)
+    branch.Fill()
+
+# Write the changes to the output file and close it
+tree_out.Write()
+file_out.Close()
+
+# Close the input file
+file_in.Close()
+
+# THIS DOESN'T WORK, ROOT FILE TOO LARGE??
+
+def convert_df_to_float(df, variables = []):
+   corr_vars = []
+   for var in variables:
+      if df.GetColumnType(var) != float:
+         df = df.Define(f"f_{var}",f"(float) {var}")
+         #print(df.GetColumnType(f"f_{var}"))
+         df = df.Redefine(var, f"f_{var}") 
+         corr_vars.append(f"{var}")
+      else:
+         corr_vars.append(var)
+   return df, corr_vars
+
+#df = ROOT.RDataFrame( "tuple_B2JpsiKRD/DecayTree;1","/afs/cern.ch/work/p/pvidrier/private/roots/data/Jpsi2ee_MagAll.root")
+#bdt = ROOT.TMVA.Experimental.RBDT[""]("bdt", fn_BDT)
+
+#df, corr_vars = convert_df_to_float(df, featuresminusM)
+#print(corr_vars)
+#df2 = df.Define("bdt_output", ROOT.TMVA.Experimental.Compute[len(corr_vars), float](bdt, corr_vars))
+#df2 = df.Define("bdt_output", bdt.Compute(df))
+#df2 = df.Define("bdt_output", ROOT.TMVA.Experimental.Compute[len(featuresminusM), float](bdt, featuresminusM))
+#df2.Snapshot("DecayTree","b.root")
