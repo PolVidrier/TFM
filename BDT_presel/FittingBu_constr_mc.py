@@ -28,11 +28,11 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name):
     Bu_DTFPV_JpsiConstr_MASS = RooRealVar("Bu_DTFPV_JpsiConstr_MASS","Bu_DTFPV_JpsiConstr_MASS", xmin, xmax)
     
     meanball  = RooRealVar("meanball","meanball",mean_val,mean_val-300,mean_val+300)    
-    sigmaball = RooRealVar("sigmaball", "sigmaball", 10, 5, 20)
+    sigmaball = RooRealVar("sigmaball", "sigmaball", 10, 5, 30)
     alphaL    = RooRealVar("alphaL", "alphaL", 1, 0.5, 3)
-    nL        = RooRealVar("nL", "nL", 7, 5, 20)
-    alphaR    = RooRealVar("alphaR", "alphaR", 2, 1, 3)
-    nR        = RooRealVar("nR", "nR", 7, 5, 20)
+    nL        = RooRealVar("nL", "nL", 7, 1, 10)
+    alphaR    = RooRealVar("alphaR", "alphaR", 1, 0.1, 2)
+    nR        = RooRealVar("nR", "nR", 7, 1, 10)
     ball=RooCrystalBall("ball","ball",Bu_DTFPV_JpsiConstr_MASS,meanball,sigmaball,alphaL,nL,alphaR,nR)
 
     
@@ -91,7 +91,7 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name):
 
     #Draw the fitted histogram into pad1
     pad1.cd()
-    t1 = ROOT.TPaveLabel(4700.,1200.,5200.,1600., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
+    t1 = ROOT.TPaveLabel(5600.,200.,6000.,400., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
     massFrame.addObject(t1) 
     massFrame.SetTitle("Histogram and fit of %s" % name)
     
@@ -106,13 +106,13 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name):
     sigVal = ufloat(nsig.getValV(), nsig.getError())
 
 
-    t3 = ROOT.TPaveLabel(4700.,1600.,5200.,2000., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
-    t5 = ROOT.TPaveLabel(4700.,2000.,5200.,2400., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
-    t6 = ROOT.TPaveLabel(4700.,2400.,5200.,2800., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
-    t8 = ROOT.TPaveLabel(4700.,2800.,5200.,3200., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
-    t9 = ROOT.TPaveLabel(4700.,3200.,5200.,3600., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
-    t10 = ROOT.TPaveLabel(4700.,3600.,5200.,4000., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
-    t11 = ROOT.TPaveLabel(4700.,4000.,5200.,4400., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
+    t3 = ROOT.TPaveLabel(5600.,400.,6000.,600., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
+    t5 = ROOT.TPaveLabel(5600.,600.,6000.,800., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
+    t6 = ROOT.TPaveLabel(5600.,800.,6000.,1000., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
+    t8 = ROOT.TPaveLabel(5600.,1000.,6000.,1200., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
+    t9 = ROOT.TPaveLabel(5600.,1200.,6000.,1400., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
+    t10 = ROOT.TPaveLabel(5600.,1400.,6000.,1600., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
+    t11 = ROOT.TPaveLabel(5600.,1600.,6000.,1800., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
     
     
     massFrame.addObject(t3)
@@ -130,7 +130,7 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name):
     print("Fit_%s done" % name)
 
 # FOR THE MC
-file="/eos/lhcb/user/p/pvidrier/roots/mc_presel_with_cuts.root"
+file="/eos/lhcb/user/p/pvidrier/roots/mc_presel_with_cuts_Bu_JpsiConstr.root"
 tree="DecayTree"
 cuts="" # cuts already there
 name="Bu_JpsiConstr_mc"
