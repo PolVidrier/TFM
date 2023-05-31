@@ -29,18 +29,18 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name,nL_val,alphaL_val,nR_val
     # alphaR_val= fixed value for alphaR
 
     # define variables and pdfs
-    Jpsi_M = RooRealVar("Jpsi_M","Jpsi_M", xmin, xmax)
+    Bu_DTFPV_JpsiConstr_MASS = RooRealVar("Bu_DTFPV_JpsiConstr_MASS","Bu_DTFPV_JpsiConstr_MASS", xmin, xmax)
     
     meanball  = RooRealVar("meanball","meanball",mean_val,mean_val-300,mean_val+300)
-    sigmaball = RooRealVar("sigmaball", "sigmaball", 80, 10, 100)
-    alphaL    = RooRealVar("alphaL", "alphaL", alphaL_val, alphaL_val-0.01, alphaL_val+0.01)
-    nL        = RooRealVar("nL", "nL", nL_val, nL_val-0.01, nL_val+0.01)
-    alphaR    = RooRealVar("alphaR", "alphaR", alphaR_val, alphaR_val-0.01, alphaR_val+0.01)
-    nR        = RooRealVar("nR", "nR", nR_val, nR_val-0.01, nR_val+0.01)
-    ball=RooCrystalBall("ball","ball",Jpsi_M,meanball,sigmaball,alphaL,nL,alphaR,nR)
+    sigmaball = RooRealVar("sigmaball", "sigmaball", 15, 1, 50)
+    alphaL    = RooRealVar("alphaL", "alphaL", alphaL_val, alphaL_val-5, alphaL_val+5)
+    nL        = RooRealVar("nL", "nL", nL_val, nL_val-10, nL_val+10)
+    alphaR    = RooRealVar("alphaR", "alphaR", alphaR_val, alphaR_val-5, alphaR_val+5)
+    nR        = RooRealVar("nR", "nR", nR_val, nR_val-10, nR_val+10)
+    ball=RooCrystalBall("ball","ball",Bu_DTFPV_JpsiConstr_MASS,meanball,sigmaball,alphaL,nL,alphaR,nR)
 
-    tau = RooRealVar("tau", "tau", -0.25512, -1, 0.)
-    exp = RooExponential("exp", "exp", Jpsi_M, tau)
+    tau = RooRealVar("tau", "tau", -0.25512, -1.5, 0.)
+    exp = RooExponential("exp", "exp", Bu_DTFPV_JpsiConstr_MASS, tau)
     
     alphaL.setConstant(True)
     alphaR.setConstant(True)
@@ -66,8 +66,9 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name,nL_val,alphaL_val,nR_val
     # define dataset
     file = ROOT.TFile(file)
     treee = file.Get(tree)
+    treee= treee.CopyTree("Bu_DTFPV_JpsiConstr_MASS>0")
     if (cuts!=""): treee = treee.CopyTree(cuts)
-    ds = RooDataSet("data", "dataset with x", treee, RooArgSet(Jpsi_M))
+    ds = RooDataSet("data", "dataset with x", treee, RooArgSet(Bu_DTFPV_JpsiConstr_MASS))
 
     #create and open the canvas
     can = ROOT.TCanvas("hist","hist", 200,10, 1000, 550)
@@ -80,7 +81,7 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name,nL_val,alphaL_val,nR_val
     ################
 
     # plot dataset and fit
-    massFrame = Jpsi_M.frame()
+    massFrame = Bu_DTFPV_JpsiConstr_MASS.frame()
     
     ds.plotOn(massFrame)
  
@@ -105,7 +106,7 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name,nL_val,alphaL_val,nR_val
 
     #Draw the fitted histogram into pad1
     pad1.cd()
-    t1 = ROOT.TPaveLabel(250.,40.,1250.,50., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
+    t1 = ROOT.TPaveLabel(5600.,20.,6300.,30., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
     
     massFrame.SetTitle("Histogram and fit of %s" % name)
     
@@ -126,29 +127,29 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name,nL_val,alphaL_val,nR_val
 
     print("S/sqrt(S+B) = {:.2f} +- {:.2f}".format(signif.nominal_value, signif.std_dev))
 
-    t2 = ROOT.TPaveLabel(250.,50.,1250.,60., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
-    t3 = ROOT.TPaveLabel(250.,60.,1250.,70., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
-    t4 = ROOT.TPaveLabel(250.,70.,1250.,80., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
-    t5 = ROOT.TPaveLabel(250.,80.,1250.,90., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
-    t6 = ROOT.TPaveLabel(250.,90.,1250.,100., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
-    t8 = ROOT.TPaveLabel(250.,100.,1250.,110., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
-    t9 = ROOT.TPaveLabel(250.,110.,1250.,120., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
-    t10 = ROOT.TPaveLabel(250.,120.,1250.,130., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
-    t11 = ROOT.TPaveLabel(250.,130.,1250.,140., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
-    t7 = ROOT.TPaveLabel(250.,140.,1250.,150., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
+    t2 = ROOT.TPaveLabel(5600.,30.,6300.,40., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
+    t3 = ROOT.TPaveLabel(5600.,40.,6300.,50., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
+    t4 = ROOT.TPaveLabel(5600.,50.,6300.,60., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
+    t5 = ROOT.TPaveLabel(5600.,60.,6300.,70., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
+    t6 = ROOT.TPaveLabel(5600.,70.,6300.,80., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
+    t8 = ROOT.TPaveLabel(5600.,80.,6300.,90., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
+    t9 = ROOT.TPaveLabel(5600.,90.,6300.,100., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
+    t10 = ROOT.TPaveLabel(5600.,100.,6300.,110., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
+    t11 = ROOT.TPaveLabel(5600.,110.,6300.,120., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
+    t7 = ROOT.TPaveLabel(5600.,120.,6300.,130., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
     
-    if xmin!=0: # so we can see the labels
-        t1 = ROOT.TPaveLabel(2100.,20.,2400.,25., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
-        t2 = ROOT.TPaveLabel(2100.,25.,2400.,30., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
-        t3 = ROOT.TPaveLabel(2100.,30.,2400.,35., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
-        t4 = ROOT.TPaveLabel(2100.,35.,2400.,40., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
-        t5 = ROOT.TPaveLabel(2100.,40.,2400.,45., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
-        t6 = ROOT.TPaveLabel(2100.,45.,2400.,50., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
-        t8 = ROOT.TPaveLabel(2100.,50.,2400.,55., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
-        t9 = ROOT.TPaveLabel(2100.,55.,2400.,60., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
-        t10 = ROOT.TPaveLabel(2100.,60.,2400.,65., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
-        t11 = ROOT.TPaveLabel(2100.,65.,2400.,70., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
-        t7 = ROOT.TPaveLabel(2100.,70.,2400.,75., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
+    if xmax==5600: # so we can see the labels
+        t1 = ROOT.TPaveLabel(4950.,20.,5150.,25., '#chi^{2}' + ' / ndf = {:.3f}'.format(chi2))
+        t2 = ROOT.TPaveLabel(4950.,25.,5150.,30., 'S/(S+B)^{1/2}' + '= {:.3f}'.format(signif.nominal_value))
+        t3 = ROOT.TPaveLabel(4950.,30.,5150.,35., 'NSig = {:.0f} +- {:.0f}'.format(nsig.getValV(), nsig.getError()))
+        t4 = ROOT.TPaveLabel(4950.,35.,5150.,40., 'NBkg = {:.0f} +- {:.0f}'.format(nbkg.getValV(), nbkg.getError()))
+        t5 = ROOT.TPaveLabel(4950.,40.,5150.,45., 'Mean = {:.2f} +- {:.2f}'.format(meanball.getValV(), meanball.getError()))
+        t6 = ROOT.TPaveLabel(4950.,45.,5150.,50., 'Sigma = {:.2f} +- {:.2f}'.format(sigmaball.getValV(), sigmaball.getError()))
+        t8 = ROOT.TPaveLabel(4950.,50.,5150.,55., 'alphaL = {:.2f} +- {:.2f}'.format(alphaL.getValV(), alphaL.getError()))
+        t9 = ROOT.TPaveLabel(4950.,55.,5150.,60., 'nL = {:.2f} +- {:.2f}'.format(nL.getValV(), nL.getError()))
+        t10 = ROOT.TPaveLabel(4950.,60.,5150.,65., 'alphaR = {:.2f} +- {:.2f}'.format(alphaR.getValV(), alphaR.getError()))
+        t11 = ROOT.TPaveLabel(4950.,65.,5150.,70., 'nR = {:.2f} +- {:.2f}'.format(nR.getValV(), nR.getError()))
+        t7 = ROOT.TPaveLabel(4950.,70.,5150.,75., 'Tau = {:.5f} +- {:.5f}'.format(tau.getValV(), tau.getError()))
 
 
     massFrame.addObject(t1) 
@@ -173,29 +174,16 @@ def ballFit(file,tree, cuts, mean_val, xmin, xmax, name,nL_val,alphaL_val,nR_val
 file="/eos/lhcb/user/p/pvidrier/roots/data_Ktwo_with_cuts.root"
 tree="DecayTree"
 cuts="" # cuts already there
-name="data"
-mean=3100.
-xmin=0.
-xmax=4000.
-nR_val=3.19
-alphaR_val=0.39
-nL_val=10.63
-alphaL_val=0.088
+name="Bu_JpsiConstr_data"
+mean=5300.
+xmin=4900.
+xmax=5600.
+nR_val=2.74
+alphaR_val=0.99
+nL_val=4.22
+alphaL_val=0.55
 
 ballFit(file,tree, cuts, mean, xmin, xmax, name,nL_val,alphaL_val,nR_val,alphaR_val)
 
-# FOR THE DATA WITH RANGE FROM 2000 TO 3500
-file="/eos/lhcb/user/p/pvidrier/roots/data_Ktwo_with_cuts.root"
-tree="DecayTree"
-cuts="" # cuts already there
-name="data"
-mean=3100.
-xmin=2000.
-xmax=3500.
-nR_val=3.19
-alphaR_val=0.39
-nL_val=10.63
-alphaL_val=0.08
 
-ballFit(file,tree, cuts, mean, xmin, xmax, name,nL_val,alphaL_val,nR_val,alphaR_val)
 
