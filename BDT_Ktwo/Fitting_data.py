@@ -177,10 +177,10 @@ name="data"
 mean=3100.
 xmin=0.
 xmax=4000.
-nR_val=3.19
-alphaR_val=0.39
-nL_val=10.63
-alphaL_val=0.088
+nR_val=3.21
+alphaR_val=0.76
+nL_val=11.38
+alphaL_val=0.18
 
 ballFit(file,tree, cuts, mean, xmin, xmax, name,nL_val,alphaL_val,nR_val,alphaR_val)
 
@@ -192,10 +192,10 @@ name="data"
 mean=3100.
 xmin=2000.
 xmax=3500.
-nR_val=3.19
-alphaR_val=0.39
-nL_val=10.63
-alphaL_val=0.08
+nR_val=3.21
+alphaR_val=0.76
+nL_val=11.38
+alphaL_val=0.18
 
 ballFit(file,tree, cuts, mean, xmin, xmax, name,nL_val,alphaL_val,nR_val,alphaR_val)
 

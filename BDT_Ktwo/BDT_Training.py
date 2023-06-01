@@ -284,7 +284,7 @@ def BDT_Training(mcfile,mctree,cutsmc,datafile,datatree,cutsdata,variables,name)
 mcfile="/afs/cern.ch/work/p/pvidrier/private/roots/mc/mc_total_epem.root"
 mctree="DecayTree"
 cutsmc="Bu_BKGCAT==0"
-cutsmcplus="(Bu_BKGCAT==0) & (acos((ep_PX*em_PX+ep_PY*em_PY+ep_PZ*em_PZ)/(ep_P*em_P))>0.0005) & (acos((ep_PX*Kp_PX+ep_PY*Kp_PY+ep_PZ*Kp_PZ)/(ep_P*Kp_P))>0.0005) & (acos((Kp_PX*em_PX+Kp_PY*em_PY+Kp_PZ*em_PZ)/(Kp_P*em_P))>0.0005) & (Bu_BPVIPCHI2<9)"
+cutsmcplus="(Bu_BKGCAT==0) & (acos((ep_PX*em_PX+ep_PY*em_PY+ep_PZ*em_PZ)/(ep_P*em_P))>0.0005) & (acos((ep_PX*Kp_PX+ep_PY*Kp_PY+ep_PZ*Kp_PZ)/(ep_P*Kp_P))>0.0005) & (acos((Kp_PX*em_PX+Kp_PY*em_PY+Kp_PZ*em_PZ)/(Kp_P*em_P))>0.0005) & (em_PT>500) & (ep_PT>500) & (Bu_BPVIPCHI2<9)"
 datafile="/eos/lhcb/user/p/pvidrier/roots/B2JpsiKLFU_MagAll_presel.root"
 datatree="DecayTree;1"
 cutsdata="Jpsi_M > 3200"
