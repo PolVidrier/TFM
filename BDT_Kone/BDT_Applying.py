@@ -133,7 +133,7 @@ variables="BDT_Kone/data/variableselection.yaml"
 file="/afs/cern.ch/work/p/pvidrier/private/roots/mc/mc_total_epem.root"  # a vegades em surt error i haig de borrar el document abans
 tree="DecayTree"
 cuts="Bu_BKGCAT==0" 
-cutsplus="(Bu_BKGCAT==0) & (acos((ep_PX*em_PX+ep_PY*em_PY+ep_PZ*em_PZ)/(ep_P*em_P))>0.0005) & (acos((ep_PX*Kp_PX+ep_PY*Kp_PY+ep_PZ*Kp_PZ)/(ep_P*Kp_P))>0.0005) & (acos((Kp_PX*em_PX+Kp_PY*em_PY+Kp_PZ*em_PZ)/(Kp_P*em_P))>0.0005) & (Bu_BPVIPCHI2<9)"
+cutsplus="(Bu_BKGCAT==0) & (acos((ep_PX*em_PX+ep_PY*em_PY+ep_PZ*em_PZ)/(ep_P*em_P))>0.0005) & (acos((ep_PX*Kp_PX+ep_PY*Kp_PY+ep_PZ*Kp_PZ)/(ep_P*Kp_P))>0.0005) & (acos((Kp_PX*em_PX+Kp_PY*em_PY+Kp_PZ*em_PZ)/(Kp_P*em_P))>0.0005) & (em_PT>500) & (ep_PT>500) & (Bu_BPVIPCHI2<9)" 
 name="mc_Kone"
 
 BDT_Applying(model,bestcut,variables,file,tree,cutsplus,name)

@@ -178,9 +178,9 @@ name="Bu_JpsiConstr_data"
 mean=5300.
 xmin=4900.
 xmax=5600.
-nR_val=2.79
-alphaR_val=0.98
-nL_val=4.25
+nR_val=2.91
+alphaR_val=0.97
+nL_val=4.15
 alphaL_val=0.55
 
 ballFit(file,tree, cuts, mean, xmin, xmax, name,nL_val,alphaL_val,nR_val,alphaR_val)

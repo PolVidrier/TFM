@@ -15,7 +15,7 @@ for var in dictionary:
      features.append(var)
 
 
-mcpd=mc.arrays(features,"Bu_BKGCAT==0",library="pd")
+mcpd=mc.arrays(features,"(Bu_BKGCAT==0) & (acos((ep_PX*em_PX+ep_PY*em_PY+ep_PZ*em_PZ)/(ep_P*em_P))>0.0005) & (acos((ep_PX*Kp_PX+ep_PY*Kp_PY+ep_PZ*Kp_PZ)/(ep_P*Kp_P))>0.0005) & (acos((Kp_PX*em_PX+Kp_PY*em_PY+Kp_PZ*em_PZ)/(Kp_P*em_P))>0.0005) & (em_PT>500) & (ep_PT>500) & (Bu_BPVIPCHI2<9)",library="pd")
 datapd=data.arrays(features,"Jpsi_M > 3200",library="pd")
 
 for var in dictionary:
