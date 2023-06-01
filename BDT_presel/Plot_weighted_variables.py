@@ -23,7 +23,7 @@ for var in dictionary:
 
 weightspd=weights.arrays(featureweights,library="pd")
 datapd=data.arrays(features,"(4900<Bu_DTFPV_JpsiConstr_MASS) & (Bu_DTFPV_JpsiConstr_MASS<5600)",library="pd")
-mcpd=mc.arrays(features,"(Bu_BKGCAT==0) & (acos((ep_PX*em_PX+ep_PY*em_PY+ep_PZ*em_PZ)/(ep_P*em_P))>0.0005) & (acos((ep_PX*Kp_PX+ep_PY*Kp_PY+ep_PZ*Kp_PZ)/(ep_P*Kp_P))>0.0005) & (acos((Kp_PX*em_PX+Kp_PY*em_PY+Kp_PZ*em_PZ)/(Kp_P*em_P))>0.0005) & (Bu_BPVIPCHI2<9)",library="pd")
+mcpd=mc.arrays(features,"(Bu_BKGCAT==0) & (acos((ep_PX*em_PX+ep_PY*em_PY+ep_PZ*em_PZ)/(ep_P*em_P))>0.0005) & (acos((ep_PX*Kp_PX+ep_PY*Kp_PY+ep_PZ*Kp_PZ)/(ep_P*Kp_P))>0.0005) & (acos((Kp_PX*em_PX+Kp_PY*em_PY+Kp_PZ*em_PZ)/(Kp_P*em_P))>0.0005) & (em_PT>500) & (ep_PT>500) & (Bu_BPVIPCHI2<9)",library="pd")
 
 
 
